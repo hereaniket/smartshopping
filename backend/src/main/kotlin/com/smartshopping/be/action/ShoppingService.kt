@@ -15,8 +15,16 @@ internal fun main() {
 
 fun Application.shoppingService() {
     routing {
-        get("/"){
-            call.respondText("Hello Aniket")
+        post("v1/store/"){
+            call.respondText("Store service API")
+        }
+
+        post("v1/register/"){
+            call.respondText("Registration API")
+        }
+
+        post("v1/navigate/"){
+            call.respondText("Navigation API")
         }
     }
 }
