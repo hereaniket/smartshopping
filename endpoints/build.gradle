@@ -1,17 +1,18 @@
 plugins {
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
-group 'com.smartshopping.be.action'
+group 'com.shopsmart.endpoints'
 version '1.0-SNAPSHOT'
-
-application {
-    mainClassName = 'com.smartshopping.be.action.ShoppingServiceKt'
-}
 
 repositories {
     mavenCentral()
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+application {
+    mainClassName = 'com.shopsmart.endpoints.action.ShoppingServiceKt'
 }
 
 dependencies {
