@@ -1,0 +1,263 @@
+<html>
+<style>
+    .styled-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .styled-table thead tr {
+        background-color: #767676;
+        color: #ffffff;
+        text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+
+    .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid #767676;
+    }
+
+
+
+
+</style>
+    <title>Smart Shop</title>
+
+
+    <head>
+        <script data-require="jquery@3.1.1" data-semver="3.1.1" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="style.css" />
+        <script src="script.js"></script>
+
+
+
+        <script href="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script href="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    </head>
+
+
+<body>
+
+<div align="middle">
+    <span style="color:#767676 ;font-family:Verdana; font-weight: bold; font-size: 20px;">Smart Shopping</span>
+
+    <div id="confirmationTableDiv" style="hidden: true; border: 0px solid #aaaaaa; margin-top: 2%;  width: 26%; height: auto; align-content: center">
+        <table id="confirmationTable" class="display" width="100%">
+            <tr><td>Name</td><td>Quantity</td><td>Action</td></tr>
+        </table>
+    </div>
+        <div id="formMain" style="border: 2px solid #aaaaaa; margin-top: 2%; background-color: #e9e9e9;  width: 26%; height: auto; align-content: center">
+            <div align="left" style="padding: 10px; width: 100%;">
+                <label style="font-weight: bold;width: 70%">Select your shop: </label><br>
+                <select id="store" onchange="selectStore()" style="width: 70%; margin: 10px; padding: 2px">
+                    <option value="select"><--- Select your store ---></option>
+                    <option value="walmart">Walmart</option>
+                    <option value="target">Target</option>
+                </select>
+                <button id="reset" onclick="reset()">Reset</button>
+            </div>
+
+            <div  align="left" style="padding: 10px; width: 100%;" id="itemInput">
+                <label style="font-weight: bold;width: 50%">Enter item name: </label><br>
+                <input id="itemText" onkeypress="enterKeyPressed(event)" type="text" name="item" style="width: 70%; margin: 10px; padding: 2px" maxlength="20">
+                <input type="button" id="addItem" onclick="addItem()" value="Add" />
+            </div>
+
+            <div id="tableDiv" align="left" style="padding: 10px;width: 100%; height: 40%; overflow-x: hidden; overflow-y: scroll">
+                <label style="margin-bottom: 100px; font-weight: bold;width: 70%">Your shopping items</label>
+                <p align="right" style="width: 90%"><input type="button" id="formSubmission" onclick="GetCellValues()" value="Submit" /></p>
+                <table id="itemList" class="styled-table">
+                    <tr id="tableHeader"><td>Name</td><td>Quantity</td></tr>
+                </table>
+            </div>
+        </div>
+</div>
+
+<script>
+    const host = "http://localhost"
+    const port = "8080"
+    const validate_shopping_note_url = host+":"+port+"/v1/validate/";
+    const auto_complete_url = host+":"+port+"/v1/search/autocomplete/";
+
+    const store = document.getElementById("store");
+    const resetBtn = document.getElementById("reset");
+    const element = document.getElementById("itemText")
+    const tableDiv = document.getElementById("tableDiv")
+    const table = document.getElementById("itemList")
+    const itemInput = document.getElementById("itemInput")
+    const formSubmission = document.getElementById("formSubmission")
+    const confirmationTableDiv = document.getElementById("confirmationTableDiv")
+    const confirmationTable = document.getElementById("confirmationTable")
+
+    tableDiv.hidden = true;
+    resetBtn.hidden = true;
+    store.disabled = false;
+    itemInput.hidden = true;
+    formSubmission.hidden = true;
+    confirmationTable.hidden = true
+
+    function enterKeyPressed(event) {
+        if (event.keyCode == 13) {
+            addItem()
+        } else {
+            //autocomplete feature
+            if(element.value.length >= 3){
+                autoComplete(element.value)
+            }
+        }
+    }
+
+    function addItem() {
+        if (formSubmission.hidden) {
+            formSubmission.hidden = false;
+        }
+
+        if (tableDiv.hidden) {
+            tableDiv.hidden = false
+        }
+
+        const newText = element.value.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+        if (newText != '') {
+            var tr = document.createElement("tr")
+            tr.className="active-row"
+
+            var td1 = document.createElement("td")
+            var td2 = document.createElement("td")
+            var td3 = document.createElement("td")
+
+            td1.innerHTML = "<label>"+newText+"</label>"
+            td2.innerHTML = "<div class=\"quantity buttons_added\">\n" +
+                "                <input type=\"button\" value=\"-\" class=\"minus\">\n" +
+                "                <input type=\"number\" step=\"1\" min=\"1\" max=\"\" name=\"quantity\" value=\"1\" title=\"Qty\" class=\"input-text qty text\" size=\"4\" pattern=\"\" inputmode=\"\">\n" +
+                "                <input type=\"button\" value=\"+\" class=\"plus\">\n" +
+                "            </div>"
+
+            tr.appendChild(td1)
+            tr.appendChild(td2)
+            table.appendChild(tr)
+        }
+
+        document.getElementById("itemText").value = ""
+        element.focus()
+    }
+
+    function autoComplete(value) {
+        console.log(value)
+
+        fetch(auto_complete_url, {method: 'POST', body: "{\"token\":\""+value+"\"}",
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            }).catch(reason => {
+                genericError(reason)
+        })
+    }
+
+    function selectStore() {
+
+        if (store.value != "select") {
+            resetBtn.hidden = false
+            store.disabled=true
+            itemInput.hidden = false;
+        }
+    }
+
+    function reset() {
+        formSubmission.hidden = true;
+        table.innerHTML = '';
+
+        if(document.getElementById("tableHeader") == null) {
+            var trHeader = document.createElement("tr")
+            trHeader.innerHTML = "<tr id='tableHeader'><td>Name</td><td>Quantity</td></tr>"
+            table.appendChild(trHeader)
+            tableDiv.hidden = true
+            table.className = "styled-table"
+        }
+        resetBtn.hidden = true
+        store.disabled=false
+        itemInput.hidden = true;
+    }
+
+
+    function GetCellValues() {
+        var quantity = document.getElementsByName('quantity');
+        var finalValue = "";
+        var table = document.getElementById('itemList');
+        for (var r = 0, n = table.rows.length; r < n; r++) {
+            if (r+1 <= n-1) {
+                var name = table.rows[r+1].cells[0].innerText
+                var qnty = quantity.item(r).value
+                var value = "{\"name\":\""+name.replace(/[^\w\s]/gi, '') +"\",\"quantity\":"+qnty+"}"
+
+                if (finalValue != "") {
+                    finalValue = finalValue + "," +value
+                } else {
+                    finalValue = value
+                }
+            }
+        }
+
+        const json = "{\"store_name\":\"" + store.value + "\", \"items\": [" + finalValue + "]}";
+        fetch(validate_shopping_note_url, {method: 'POST', body: json,
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                confirmShoppingDataCreation(data)
+            }).catch(reason => {
+                genericError(reason)
+            })
+    }
+
+    function confirmShoppingDataCreation(data) {
+        confirmationTableDiv.hidden = false;
+        confirmationTable.innerHTML = "<tr class='active-row'><td>Name</td><td>Quantity</td><td>Action</td></tr>"
+        for (let r = 0; r < data["items"].length; r++) {
+            const tr = document.createElement("tr");
+            tr.className="active-row"
+
+            const td1 = document.createElement("td");
+            const td2 = document.createElement("td");
+            const td3 = document.createElement("td");
+
+            td1.innerHTML = data["items"][r]["name"]
+            td2.innerHTML = data["items"][r]["quantity"]
+            td3.innerHTML = "<B>Remove</B>"
+
+            tr.appendChild(td1)
+            tr.appendChild(td2)
+            tr.appendChild(td3)
+            confirmationTable.appendChild(tr)
+            confirmationTable.hidden=false
+        }
+    }
+
+    function genericError(reason) {
+        if(reason == "TypeError: Failed to fetch"){
+            alert("8991: Smart shopping service is down")
+        } else {
+            alert("8999: Internal System Error")
+        }
+    }
+</script>
+</body>
+</html>
