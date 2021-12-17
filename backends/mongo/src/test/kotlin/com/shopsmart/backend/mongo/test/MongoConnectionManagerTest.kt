@@ -1,9 +1,7 @@
 package com.shopsmart.backend.mongo.test
 
-import com.shopsmart.backend.mongo.MongoConnectionManager
+import com.shopsmart.backend.mongo.sync.MongoConnectionManager
 import org.bson.Document
-import org.bson.conversions.Bson
-import org.bson.types.ObjectId
 import org.junit.Assert
 import org.junit.Test
 

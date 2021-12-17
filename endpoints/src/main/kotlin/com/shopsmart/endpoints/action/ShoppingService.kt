@@ -1,8 +1,12 @@
 package com.shopsmart.endpoints.action
 
 import com.mongodb.client.MongoClient
-import com.shopsmart.backend.mongo.MongoConnectionManager
+import com.mongodb.client.MongoDatabase
+import com.mongodb.client.model.Filters.and
+import com.mongodb.client.model.Filters.eq
+import com.shopsmart.backend.mongo.sync.MongoConnectionManager
 import com.shopsmart.endpoints.beans.AutoComplete
+import com.shopsmart.endpoints.beans.Product
 import com.shopsmart.endpoints.beans.ShoppingList
 import io.ktor.application.*
 import io.ktor.features.*
@@ -16,10 +20,12 @@ import io.ktor.server.netty.*
 import org.bson.Document
 import java.util.*
 
-lateinit var mongoClient: MongoClient
+private const val smartshopping_db_name = "smartshopping"
+private lateinit var mongoClient: MongoClient
+private lateinit var mongoDb: MongoDatabase
 
 fun main() {
-    val server = embeddedServer(Netty, 8080) {
+    embeddedServer(Netty, 8080) {
         install(CORS) {
             host("*")
             header(HttpHeaders.ContentType)
@@ -27,8 +33,8 @@ fun main() {
         install(ContentNegotiation){
             register(ContentType.Application.Json, JacksonConverter())
         }
-
         mongoClient = MongoConnectionManager.init()
+        mongoDb = mongoClient.getDatabase(smartshopping_db_name)
 
         shoppingService()
     }.start(wait = true)
@@ -40,10 +46,21 @@ fun Application.shoppingService() {
         get("/") {
             call.respondText("Hello Kotlin")
         }
+
         post("v1/search/autocomplete/"){
             val autoComplete = call.receive<AutoComplete>()
-            //TODO
-            call.respond(HttpStatusCode.OK, autoComplete)
+            val prodTagColl = mongoDb.getCollection("product_tags")
+            val prodList = mutableListOf<Product>()
+
+            prodTagColl.find(and(eq("product_tag",autoComplete.token),eq("store_name", "walmart")))
+                .limit(5)
+                .forEach {
+                    prodList.add(Product(it.getString("store_name"),
+                        it.getString("prod_id"),
+                        it.getString("product_full_name"),
+                        mutableListOf<String>("")))
+                }
+            call.respond(HttpStatusCode.OK, prodList)
         }
 
         post("v1/register/"){
@@ -60,8 +77,7 @@ fun Application.shoppingService() {
             val order = Document()
 
             if(mongoClient != null) {
-                val mongoDb = mongoClient.getDatabase("shopsmart")
-                val mongoCollection = mongoDb.getCollection("sore")
+                val storeColl = mongoDb.getCollection("store")
 
                 val docs = mutableListOf<Document>()
 
@@ -70,11 +86,12 @@ fun Application.shoppingService() {
                     val doc = Document()
                     doc.append("name",it.name)
                     doc.append("quantity",it.quantity)
+                    doc.append("prodId", it.prodId)
                     docs.add(doc)
                 }
                 order.append("items", docs)
                 order.append("order_id", orderId)
-                mongoCollection.insertOne(order)
+                storeColl.insertOne(order)
             }
 
             call.response.header("correlationId",orderId)
