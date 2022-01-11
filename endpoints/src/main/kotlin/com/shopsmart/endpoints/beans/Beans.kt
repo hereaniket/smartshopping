@@ -8,7 +8,7 @@ data class Item(val name: String, val quantity: Int, val prodId: String)
 data class ShoppingList(val store_name: String, val items: List<Item>)
 
 @Serializable
-data class AutoComplete(val token: String)
+data class AutoComplete(val token: String, val store_name: String)
 
 @Serializable
-data class Product(val store_name: String, val prod_id: String, val product_full_name: String, val product_tag: List<String>)
+data class Product(val store_name: String, val prod_id: Int, val product_full_name: String, val product_tag: List<String>)

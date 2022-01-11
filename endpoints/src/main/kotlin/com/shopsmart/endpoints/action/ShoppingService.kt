@@ -1,11 +1,8 @@
 package com.shopsmart.endpoints.action
 
-import com.mongodb.client.MongoClient
-import com.mongodb.client.MongoDatabase
-import com.mongodb.client.model.Filters.and
-import com.mongodb.client.model.Filters.eq
-import com.shopsmart.backend.mongo.sync.MongoConnectionManager
+import com.shopsmart.backend.service.db.SmartShopDBManager
 import com.shopsmart.endpoints.beans.AutoComplete
+import com.shopsmart.endpoints.beans.Item
 import com.shopsmart.endpoints.beans.Product
 import com.shopsmart.endpoints.beans.ShoppingList
 import io.ktor.application.*
@@ -17,12 +14,13 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bson.Document
 import java.util.*
 
-private const val smartshopping_db_name = "smartshopping"
-private lateinit var mongoClient: MongoClient
-private lateinit var mongoDb: MongoDatabase
+private lateinit var smartShopDBManager: SmartShopDBManager
 
 fun main() {
     embeddedServer(Netty, 8080) {
@@ -33,8 +31,6 @@ fun main() {
         install(ContentNegotiation){
             register(ContentType.Application.Json, JacksonConverter())
         }
-        mongoClient = MongoConnectionManager.init()
-        mongoDb = mongoClient.getDatabase(smartshopping_db_name)
 
         shoppingService()
     }.start(wait = true)
@@ -42,64 +38,96 @@ fun main() {
 
 fun Application.shoppingService() {
 
-    routing {
-        get("/") {
-            call.respondText("Hello Kotlin")
-        }
+    launch {
+        smartShopDBManager = SmartShopDBManager()
+    }.invokeOnCompletion { result ->
+        if (result != null) {
 
-        post("v1/search/autocomplete/"){
-            val autoComplete = call.receive<AutoComplete>()
-            val prodTagColl = mongoDb.getCollection("product_tags")
-            val prodList = mutableListOf<Product>()
-
-            prodTagColl.find(and(eq("product_tag",autoComplete.token),eq("store_name", "walmart")))
-                .limit(5)
-                .forEach {
-                    prodList.add(Product(it.getString("store_name"),
-                        it.getString("prod_id"),
-                        it.getString("product_full_name"),
-                        mutableListOf<String>("")))
+        } else {
+            routing {
+                get("/") {
+                    call.respondText("Hello Kotlin")
                 }
-            call.respond(HttpStatusCode.OK, prodList)
-        }
 
-        post("v1/register/"){
-            call.respondText("Registration API")
-        }
-
-        post("v1/navigate/"){
-            call.respondText("Navigation API")
-        }
-
-        post("v1/validate/"){
-            val shoppingList = call.receive<ShoppingList>()
-            val orderId = UUID.randomUUID().toString()
-            val order = Document()
-
-            if(mongoClient != null) {
-                val storeColl = mongoDb.getCollection("store")
-
-                val docs = mutableListOf<Document>()
-
-                order.append("store_name", shoppingList.store_name)
-                shoppingList.items.forEach{
-                    val doc = Document()
-                    doc.append("name",it.name)
-                    doc.append("quantity",it.quantity)
-                    doc.append("prodId", it.prodId)
-                    docs.add(doc)
+                post("v1/search/autocomplete/"){
+                    val autoComplete = call.receive<AutoComplete>()
+                    val prodList = smartShopDBManager.searchProductTags(autoComplete.token, autoComplete.store_name)
+                        .toList()
+                    call.respond(HttpStatusCode.OK, prodList)
                 }
-                order.append("items", docs)
-                order.append("order_id", orderId)
-                storeColl.insertOne(order)
+
+                post("v1/search/matchTags/"){
+                    val autoComplete = call.receive<AutoComplete>()
+                    val productsBson = smartShopDBManager.searchUnknownProducts(autoComplete.token)
+
+                    val products = productsBson.map { product ->
+                        Product(prod_id = product.getInteger("prod_id"),
+                            store_name = product.getString("store_name"),
+                            product_full_name = product.getString("product_full_name"),
+                            product_tag = listOf())
+                    }
+                    call.respond(HttpStatusCode.OK, products)
+                }
+
+                post("v1/register/"){
+                    call.respondText("Registration API")
+                }
+
+                post("v1/save/"){
+                    call.respondText("Navigation API")
+                }
+
+                post("v1/validate/"){
+                    val shoppingList = call.receive<ShoppingList>()
+
+                    withContext(Dispatchers.IO) {
+                        val knownUnknownMap = separateKnownAndUnknown(shoppingList)
+
+                        knownUnknownMap["UNKNOWN"].orEmpty()
+                            .forEach { item ->
+                                val tag = smartShopDBManager.searchUnknownProducts(item.name)
+                                print("Hello $tag")
+                            }
+
+                        val order = buildNavigationOrder(shoppingList)
+                        smartShopDBManager.saveNavigationOrder(order)
+                        call.response.header("correlationId",order.getString("order_id"))
+                        call.respond(HttpStatusCode.OK, order)
+                    }
+
+                }
             }
-
-            call.response.header("correlationId",orderId)
-            call.respond(HttpStatusCode.OK, order.toJson())
         }
     }
+
 }
 
-fun validate(shoppingList: ShoppingList) {
 
+
+fun buildNavigationOrder(shoppingList: ShoppingList): Document {
+    val orderId = UUID.randomUUID().toString()
+    val order = Document()
+    val products = mutableListOf<Document>()
+
+    order.append("store_name", shoppingList.store_name)
+    shoppingList.items.forEach{
+        val product = Document()
+        product.append("name",it.name)
+        product.append("quantity",it.quantity)
+        product.append("prodId", it.prodId.trim())
+        products.add(product)
+    }
+    order.append("items", products)
+    order.append("order_id", orderId)
+
+    return order
+}
+
+fun separateKnownAndUnknown(shoppingList: ShoppingList): Map<String, List<Item>> {
+
+    return shoppingList.items
+        .groupBy {
+            if(it.prodId.isNullOrEmpty().or(it.prodId.isNullOrBlank())) "UNKNOWN"
+            else "KNOWN"
+        }
 }

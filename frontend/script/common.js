@@ -3,11 +3,16 @@
     const port = "8080"
     const validate_shopping_note_url = host+":"+port+"/v1/validate/";
     const auto_complete_url = host+":"+port+"/v1/search/autocomplete/";
+    const match_tag_url = host+":"+port+"/v1/search/matchTags/";
+
     let suggestedElementSet = new Map()
     let navCurrentIndex = -1;
     let maxSugProd = 10;
     const suggStyle = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; background-color: #ececf6;"
     const suggStyleSelc = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; background-color: #6c757d;"
+
+    const suggStyleMouseOver = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: bold"
+    const suggStyleMouseLeave = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: regular"
 
     let store
     let resetBtn
@@ -16,13 +21,15 @@
     let table
     let itemInput
     let formSubmission
-    let confirmationTableDiv
     let confirmationTable
     let suggestionBox
     let currProdId = null
     let currProdName = null
+    let reviewItemsText = null
+    let loadingAnimation = null
 
     function init() {
+        reviewItemsText = document.getElementById("reviewItemsText")
         store = document.getElementById("store");
         resetBtn = document.getElementById("reset");
         element = document.getElementById("itemText")
@@ -30,16 +37,18 @@
         table = document.getElementById("itemList")
         itemInput = document.getElementById("itemInput")
         formSubmission = document.getElementById("formSubmission")
-        confirmationTableDiv = document.getElementById("confirmationTableDiv")
         confirmationTable = document.getElementById("confirmationTable")
         suggestionBox = document.getElementById("suggestionHolder")
+        loadingAnimation = $('loadingAnimation')
 
         tableDiv.hidden = true;
         resetBtn.hidden = true;
         store.disabled = false;
         itemInput.hidden = true;
-        formSubmission.hidden = true;
-        confirmationTable.hidden = true
+        formSubmission.hidden = true
+        reviewItemsText.hidden = true;
+        suggestionBox.innerHTML = "";
+        loadingAnimation.hidden = true
     }
 
 
@@ -70,4 +79,20 @@
             body: json,
             headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
         })
+    }
+
+    function autoCompleteOnMouseOverORLeave(obj, flag) {
+        console.log(obj)
+        console.log(flag)
+    }
+
+
+    const loader = document.querySelector(".loader");
+    window.onload = function(){
+        setTimeout(function(){
+            loader.style.opacity = "0";
+            setTimeout(function(){
+                loader.style.display = "none";
+            }, 500);
+        },1500);
     }

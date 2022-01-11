@@ -5,8 +5,7 @@ import com.mongodb.client.MongoClients
 
 object MongoConnectionManager {
 
-    fun init(): MongoClient{
-        val connStr = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000";
-        return MongoClients.create(connStr)
+    fun init(connectionString: String = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"): MongoClient{
+        return MongoClients.create(connectionString)
     }
 }
