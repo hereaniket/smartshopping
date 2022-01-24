@@ -4,12 +4,14 @@
     const validate_shopping_note_url = host+":"+port+"/v1/validate/";
     const auto_complete_url = host+":"+port+"/v1/search/autocomplete/";
     const match_tag_url = host+":"+port+"/v1/search/matchTags/";
+    const find_store_url = host+":"+port+"/v1/search/store/";
 
     let suggestedElementSet = new Map()
     let navCurrentIndex = -1;
     let maxSugProd = 10;
-    const suggStyle = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; background-color: #ececf6;"
-    const suggStyleSelc = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; background-color: #6c757d;"
+
+    const suggStyle = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: regular; background-color: #ececf6; width: 70%"
+    const suggStyleSelc = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:12px; font-weight: bold; background-color: #6c757d; width: 70%"
 
     const suggStyleMouseOver = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: bold"
     const suggStyleMouseLeave = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: regular"
@@ -27,6 +29,7 @@
     let currProdName = null
     let reviewItemsText = null
     let loadingAnimation = null
+    let backToProdList = null
 
     function init() {
         reviewItemsText = document.getElementById("reviewItemsText")
@@ -39,6 +42,7 @@
         formSubmission = document.getElementById("formSubmission")
         confirmationTable = document.getElementById("confirmationTable")
         suggestionBox = document.getElementById("suggestionHolder")
+        backToProdList = document.getElementById("backToProdList")
         loadingAnimation = $('loadingAnimation')
 
         tableDiv.hidden = true;
@@ -49,6 +53,7 @@
         reviewItemsText.hidden = true;
         suggestionBox.innerHTML = "";
         loadingAnimation.hidden = true
+        backToProdList.hidden = true;
     }
 
 
@@ -81,9 +86,23 @@
         })
     }
 
+    function get(url) {
+        console.log("GET: "+url)
+        return fetch(url, {
+            method: 'GET',
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+        })
+    }
+
     function autoCompleteOnMouseOverORLeave(obj, flag) {
-        console.log(obj)
-        console.log(flag)
+
+        if(flag = "over") {//console.log(obj)
+            //obj.setAttribute("style", suggStyleSelc)
+        } else if(flag = "leave") {//console.log(obj)
+            //obj.setAttribute("style", suggStyle)
+        } else {
+            console.log(obj)
+        }
     }
 
 
@@ -95,4 +114,11 @@
                 loader.style.display = "none";
             }, 500);
         },1500);
+    }
+
+    function capFirstLetter(string) {
+        if (string != null && string.length > 1) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        } else return string
+
     }

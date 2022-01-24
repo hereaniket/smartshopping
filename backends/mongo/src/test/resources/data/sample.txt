@@ -1,0 +1,54 @@
+walmart001##100124##Whole Grain Bread##Nature's Own 100% Whole Grain Bread loaf##Nature's Own##Bread##grocery##Grocery##A2, A3##A##2##14##bread##bread
+walmart001##100123##Honey Wheat Bread##Nature's Own Honey Wheat Bread loaf##Nature's Own##Bread##grocery##Grocery##A2, A3##A##2##14##bread##bread
+walmart001##100125##Butterbread##Nature's Own Butterbread Bread Loaf##Nature's Own##Bread##grocery##Grocery##A2, A3##A##2##14##bread##bread
+walmart001##2010009##Little Debbie Zebra Cakes##Little Debbie Zebra Cakes, 13 oz##Little Debbie##Snack Cake##grocery##Grocery##A2, A3##A##2##15##snacks##Little, Debbie, Zebra, Cakes
+walmart001##2010010##Jif Creamy Peanut Butter##Jif Creamy Peanut Butter, 40-Ounce Jar##Jif Creamy ##Peanut Butter##grocery##Grocery##A2, A3##A##2##15##snacks##Jif, Creamy, Peanut, Butter
+walmart001##2010008##Starbucks Breakfast Blend##Starbucks Breakfast Blend, Whole Bean Coffee, Medium Roast, 18 oz##Starbucks##Coffie##grocery##Grocery##A2, A3##A##3##20##coffie##Starbucks, Breakfast, Blend, Beans, Coffee, Medium, Roast
+walmart001##2010011##Mahatma Enriched Extra Long Grain White Rice##Mahatma Enriched Extra Long Grain White Rice 5 lb Bag##Mahatma##Rice##grocery##Grocery##A4, A5##A##4##10##asian##Mahatma,  Extra, Long, Grain, White, Rice, 5lb, Bag,asian
+walmart001##2010012##Hidden Valley Gluten-Free, Original Ranch Salad Dressings##Hidden Valley Gluten-Free, Original Ranch Salad Dressings & Topping, 24 Fl Oz##Hidden Valley##Salad Dressing##grocery##Grocery##A4, A5##A##5##12##Salad Dressing##Salad, Dressing,Hidden, Valley, Ranch
+walmart001##2010014##OREO Double Stuf Chocolate Sandwich Cookies##OREO Double Stuf Chocolate Sandwich Cookies, Family Size, 20 oz##OREO##Cookie##grocery##Grocery##A12, A13##A##12##19##softdrinks/cookies##OREO, Chocolate, Sandwich, Cookies
+walmart001##2010015##ACT II Butter Lovers Microwave Popcorn##ACT II Butter Lovers Microwave Popcorn, 2.75 Oz, 12 Ct##ACT II##Popcorn##grocery##Grocery##A12, A13##A##12##27##softdrinks/cookies##ACT2, Butter, Microwave, Popcorn
+walmart001##2010013##Sprite Caffeine-Free Lemon Lime Soda Pop##Sprite Caffeine-Free Lemon Lime Soda Pop, 12 Fl Oz, 24 Pack Cans##Sprite##Soft Drink##grocery##Grocery##A12, A13##A##13##19##softdrinks/cookies##Sprite, Caffeine, Free, Lemon, Lime, Soda, Cans
+walmart001##2010016##Lay's Classic Potato Chips##Lay's Classic Potato Chips, Party Size, 13 oz Bag##Lay's##Chips##grocery##Grocery##A14, A15##A##15##15##softdrinks/cookies##Lays, Classic, Potato, Chips, Party, Size
+walmart001##2010017##Hefty® Strong Large Multi-Purpose Trash Bags##Hefty® Strong Large Multi-Purpose Trash Bags, 30 Gallon, 40 Bags (Drawstring)##Hefty®##Trash Bags##grocery##Grocery##A18, A19##A##18##6##disposable tabletop##Hefty, Strong, Large, Multi, Purpose, Trash, Bags, Gallon, Bags
+walmart001##2010018##Great Value Everyday Disposable Foam Plates##Great Value Everyday Disposable Foam Plates, 9 in, 150 ct##Great Value##Paper Plates##grocery##Grocery##A18, A19##A##19##9##disposable tabletop##Everyday, Disposable, Foam, Plates
+walmart001##2010020##Patron Silver Tequila##Patron Silver Tequila 40% 750mL##Patron##Liquor##grocery##Grocery##A26, A27##A##26##2##liquor/alcoholic beverages##Patron, Silver, Tequila, 750mL
+walmart001##2010019##Bud Light Beer, 30 Pack Beer, 12 FL OZ Cans##Bud Light Beer, 30 Pack Beer, 12 FL OZ Cans##Bud Light##Beer##grocery##Grocery##A26, A27##A##27##1##liquor/alcoholic beverages##Bud, Light, Beer, Cans
+walmart001##2010022##Hot Pockets Premium Pepperoni Pizza Crispy Crust##Hot Pockets Premium Pepperoni Pizza Crispy Crust Frozen Snacks 54 oz.##Hot Pockets##Frozen Snacks##grocery##Grocery##A30, A31##A##30##20##Frozen Meals##Frozen, Meals,
+walmart001##2010021##Red Baron Pizza, Classic Crust##Red Baron Pizza, Classic Crust Supreme 23.45 oz##Red Baron Pizza##Frozen Pizza##grocery##Grocery##A30, A31##A##31##20##Frozen Meals##Frozen, Meals,
+walmart001##2010023##Great Value Steamable Mixed Vegetables##Great Value Steamable Mixed Vegetables, Frozen, 12 oz##Great Value##Frozen Vegetables##grocery##Grocery##A32, A33##A##32##25##Frozen Vegetables##Frozen, Steamable, Mixed
+walmart001##2010024##Great Value Whole Vitamin D Milk##Great Value Whole Vitamin D Milk, Gallon, 128 fl oz##Great Value##Frozen Meals##grocery##Grocery##A32, A33##A##33##2##Frozen Meals##milk, Whole, Vitamin, Milk
+walmart001##2010001##Simply Perfect Russet Potatoes##Simply Perfect Russet Potatoes, 5lb bag##Simply Perfect ##Fresh Produce##grocery##Grocery##A1##A##1##1##vegetables##vegetable,Simply,Perfect, Russet, Potatoes, bag
+walmart001##2010003##Red Potatoes##Red Potatoes, 5lb bag##Red Potatoes##Fresh Produce##grocery##Grocery##A1##A##1##1##vegetables##vegetable,Red, Potatoes, 5lb, bag
+walmart001##2010005##Russet Baking Potatoes##Russet Baking Potatoes, each##Russet##Fresh Produce##grocery##Grocery##A1##A##1##1##vegetables##vegetable,Russet, Baking, Potatoes, each
+walmart001##2010006##Baby Red Potatoes##Baby Red Potatoes, 1.5 lb Bag##Red Potatoes##Fresh Produce##grocery##Grocery##A1##A##1##1##vegetables##vegetable,Baby, Red, Potatoes, Bag
+walmart001##2010002##Simply Perfect Russet Potatoes##Simply Perfect Russet Potatoes, 10lb bag##Simply Perfect ##Fresh Produce##grocery##Grocery##A1##A##1##1##vegetables##vegetable,Simply, Perfect, Russet, Potatoes, 10lb, bag
+walmart001##2010004##Red Potatoes##Red Potatoes, 10lb bag##Red Potatoes##Fresh Produce##grocery##Grocery##A1##A##1##1##vegetables##vegetable,Red, Potatoes, 10lb, bag
+walmart001##2010007##Sweet Potatoes##Sweet Potatoes, 3 lb Bag##Sweet Potatoes##Fresh Produce##grocery##Grocery##A1##A##1##1##vegetables##Sweet,Potatoes, 3lb, Bag
+walmart001##20220119##Whole Carrots, 16 Oz bag##Whole Carrots, 16 Oz bag##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##3##vegetables##vegetable, carrot, whole
+walmart001##20220120##Whole Carrots, 5 lb Bag##Whole Carrots, 5 lb Bag##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##3##vegetables##vegetable, carrot, whole
+walmart001##20220121##Organic Petite Carrots, 12 Oz Bag##Organic Petite Carrots, 12 Oz Bag##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##3##vegetables##vegetable, carrot, whole
+walmart001##20220122##Limes, 1 each##Limes, 1 each##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##5##vegetables##vegetable, lime, lemons
+walmart001##20220123##Lemons, each##Lemons, each##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##5##vegetables##vegetable, lime, lemons
+walmart001##20220124##Green Bell Pepper##Green Bell Pepper##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##6##vegetables##green, vegetable, pepper, bell, jalapeno
+walmart001##20220125##MIXED BELL PEPPER 3 PACK##MIXED BELL PEPPER 3 PACK##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##6##vegetables##green, vegetable, pepper, bell, jalapeno
+walmart001##20220126##Jalapeno Peppers, approx. 3-5 per 0.25 lb##Jalapeno Peppers, approx. 3-5 per 0.25 lb##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##6##vegetables##green, vegetable, pepper, bell, jalapeno
+walmart001##20220127##Mini Sweet Peppers, 16 Oz##Mini Sweet Peppers, 16 Oz##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##6##vegetables##green, vegetable, pepper, bell, jalapeno, mini, sweet
+walmart001##20220128##Tomatillos, per pound##Tomatillos, per pound##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##6##vegetables##green, vegetable, pepper, tomatillos
+walmart001##20220129##Cubanelle Peppers##Cubanelle Peppers##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##6##vegetables##green, vegetable, pepper, bell, jalapeno, Cubanelle
+walmart001##20220130##Fresh Cilantro, Bunch##Fresh Cilantro, Bunch##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##7##harbs##green, vegetable, cilantro, bunch
+walmart001##20220131##Fresh USDA Organic Strawberries, 16 Oz##Fresh USDA Organic Strawberries, 16 Oz##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##8##fruits##organic, usda, strawberries, fruit
+walmart001##20220132##Fresh Strawberries, 1 lb##Fresh Strawberries, 1 lb##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##8##fruits##strawberry, strawberries, fresh, berry, berries, fruit
+walmart001##20220133##Fresh Blueberries, 18 oz##Fresh Blueberries, 18 oz##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##8##fruits##blueberry, blueberries, fresh, berry, berries, fruit
+walmart001##20220134##Fresh Blackberries, 6 oz##Fresh Blackberries, 6 oz##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##8##fruits##blackberry, blackberries, fresh, berry, berries, fruit
+walmart001##20220135##Bananas, each##Bananas, each##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##10##fruits##banana, fruit
+walmart001##20220140##Organic Bananas, Bunch##Organic Bananas, Bunch##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##10##fruits##banana, fruit, organic, bunch
+walmart001##20220136##Gala Apples, Bulk##Gala Apples, Bulk##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##12##fruits## apple, gala, fruit
+walmart001##20220137##Red Grapefruit, 5lb Bag##Red Grapefruit, 5lb Bag##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##12##fruits## red, grape, grapefruit, fruit
+walmart001##20220138##Navel Oranges, 3 lb Bag##Navel Oranges, 3 lb Bag##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##12##fruits## navel, fruit, oranges
+walmart001##20220139##Valencia Juicing Oranges, 4 lb Bag##Valencia Juicing Oranges, 4 lb Bag##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##12##fruits##fruit, oranges, valencia
+walmart001##20220143##Seedless Watermelon, each##Seedless Watermelon, each##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##14##fruits##fruit, seedless, each, water, water melon, melon
+walmart001##20220141##Cantaloupe, each##Cantaloupe, each##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##14##fruits##fruit, cantaloupe, each
+walmart001##20220145##Pineapple##Pineapple##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##14##fruits##fruit, pineapple
+walmart001##20220142##Hass Avocados, each##Hass Avocados, each##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##9##fruits##fruit, avocados, each, hass
+walmart001##20220144##Fresh Green Seedless Grapes, Bag##Fresh Green Seedless Grapes, Bag##Fresh Produce##Fresh Produce##grocery##Grocery##A1##A##1##12##fruits##fruit, seedless, bag, grapes, green

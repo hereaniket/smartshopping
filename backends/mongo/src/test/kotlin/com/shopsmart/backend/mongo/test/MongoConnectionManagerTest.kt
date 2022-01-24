@@ -21,11 +21,11 @@ class MongoConnectionManagerTest {
         mongoCollection.insertOne(doc)
 
         val docs = mongoCollection.countDocuments()
-
-        val result = mongoCollection.find()
+        Assert.assertNotNull(docs)
+        /*val result = mongoCollection.find()
             .filter(Document("order_id","5b127b3e-edb7-4141-9dcc-3f84c5323af3"))
             .first()
-
+        Assert.assertNotNull(result)*/
         Assert.assertNotNull(mongoClient)
         mongoClient.close()
     }

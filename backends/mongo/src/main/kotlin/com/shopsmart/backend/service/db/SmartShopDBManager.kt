@@ -2,6 +2,7 @@ package com.shopsmart.backend.service.db
 
 import com.mongodb.client.FindIterable
 import com.mongodb.client.model.Filters.*
+import com.mongodb.client.model.TextSearchOptions
 import com.shopsmart.backend.mongo.sync.MongoConnectionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,9 +14,9 @@ class SmartShopDBManager() {
     private val mongoClient = MongoConnectionManager.init()
     private val mongoDb = mongoClient.getDatabase("smartshopping")
 
-    fun searchProductTags(token: String, store_name: String): FindIterable<Document> {
+    fun searchProductTags(token: String, store_id: String): FindIterable<Document> {
         return mongoDb.getCollection("product_tags")
-            .find(and(eq("product_tag", token), eq("store_name", store_name)))
+            .find(and(eq("tags", token), eq("storeId", store_id)))
             .limit(10)
     }
 
@@ -26,12 +27,20 @@ class SmartShopDBManager() {
         }
     }
 
-    suspend fun searchUnknownProducts(text: String): List<Document> {
+    suspend fun searchProductTags(bson: Bson, limit: Int): List<Document> {
         return withContext(Dispatchers.Default){
             mongoDb.getCollection("product_tags")
-                .find(text(text))
-                .limit(5)
+                .find(bson)
+                .limit(limit)
                 .toList()
+        }
+    }
+
+    suspend fun fetchProductInfo(prodId: String, storeId: String): Document?{
+        return withContext(Dispatchers.Default) {
+            mongoDb.getCollection("store")
+                .find(and(eq("prodId", prodId), eq("storeId", storeId)))
+                .firstOrNull()
         }
     }
 }
