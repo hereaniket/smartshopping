@@ -11,13 +11,34 @@ import java.io.IOException
 fun main() {
 
     // INSERT FROM FILE ## separated
-    dataUploaderTest("/Users/aniketpathak/Documents/Projects/ShopSmart/backends/mongo/src/test/resources/data/sample.txt")
-
+    //dataUploaderTest("/Users/aniketpathak/Documents/Projects/ShopSmart/backends/mongo/src/test/resources/data/sample.txt")
+uploadStoreInfo("/Users/aniketpathak/Documents/Projects/ShopSmart/backends/mongo/src/test/resources/data/store.txt")
     // TO DELETE SOMETHING
     /*val deleted = deleteMany(Filters.eq("storeId", "walmart001"), "store", "smartshopping")
     println("deleted ?$deleted")*/
 }
 
+fun uploadStoreInfo(fileName: String) {
+    var storeList = mutableListOf<Document>()
+    val reader = BufferedReader(FileReader(fileName));
+
+    reader.lines()
+        .forEach { item ->
+            val split = item.split("##")
+
+            val store = Document()
+            store.append("storeId", split[0])
+            store.append("storeNm", split[1])
+            store.append("storeZp", split[2])
+            store.append("storeAddressId", split[3])
+            storeList.add(store)
+        }
+
+    val mongoClient = MongoConnectionManager.init()
+    val mongoDb = mongoClient.getDatabase("smartshopping")
+    mongoDb.getCollection("store").insertMany(storeList)
+
+}
 fun dataUploaderTest(fileName: String) {
     var products = mutableListOf<Document>()
     var prodTags = mutableListOf<Document>()

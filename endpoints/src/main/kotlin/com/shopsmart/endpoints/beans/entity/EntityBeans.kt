@@ -27,9 +27,9 @@ data class AisleInfo(
 data class OrderInfo(
     val orderId: String,
     val storeId: String,
-    val nameOnOrder: String,
-    val emailId: String,
-    val mobile: String,
-    val totalAmt: Double,
-    val prodIdList: List<String>,
+    var nameOnOrder: String?=null,
+    var emailId: String?=null,
+    var mobile: String?=null,
+    var totalAmt: Double?=null,
+    var prodIdList: List<String>?=null,
 )

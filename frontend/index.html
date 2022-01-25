@@ -61,33 +61,26 @@
                 <p>
                     <button id="reset" onclick="reset()">Reset</button>
                 </p>
-                <p>
-                    <label style="font-weight: bold;">Enter your zip: </label></p>
-                <p><input type="text" id="zip" maxlength="5" onkeyup="findStore(event)"
-                          onkeypress='return event.charCode >= 48 && event.charCode <= 57'></p>
 
-                <p>
-                    <label style="font-weight: bold;">Select your shop: </label></p>
-                <p>
-                    <select id="store" onchange="changeStore()" style="">
-                        <option value="select"><--- Select your store ---></option>
-                        <option value="walmart001">Walmart</option>
-                        <option value="walmart001">Target</option>
-                    </select>
-                </p>
+                <div>
+                    <label style="font-weight: bold;">Enter your zip: </label>
+                    <input  autocomplete="off" style="padding: 0px; width: 70%" maxlength="5" type="text" id="zip" maxlength="5" onkeyup="findStore(event)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                    <div id="storeLocatorAC" style="; margin-left: 22%"></div>
+                </div>
 
+                <div id="selectStoreLabel"><br>
+                    <label style="font-weight: bold;">Select your shop: </label>
+                    <label style="font-weight: normal;" id="storeName"></label>
+                    <input type="hidden" id="store" />
+                </div>
 
-                <!--<div style="padding: 1px 1px 1px 1px;">
-                    <p style="font-size: 12px; border: 0px solid #0b2e13">Frequently visited stores <u onmouseover="this.style.cursor='pointer'" onclick="changeStore('walmart', 1)">Walmart</u>, <u onmouseover="this.style.cursor='pointer'" onclick="changeStore('target', 2)">Target</u></p>
-                </div>-->
             </div>
 
             <div align="left" style="padding: 10px; " id="itemInput">
-                <label style="font-weight: bold;">Enter item name: </label><br>
-                <!--<input type="button" id="addItem" onclick="addToShoppingList()" value="Add" />-->
+                <label style="font-weight: bold;">Enter item name: </label>
                 <input autocomplete="off" id="itemText" onkeyup="actionOnKeyUp(event)" type="text" name="item"
-                       style="padding: 0px; width: 70%" maxlength="20"/>
-                <div id="suggestionHolder" style="; margin-left: 10px"></div>
+                       style="padding: 0px; width: 65%" maxlength="20"/>
+                <div id="suggestionHolder" style="; margin-left: 25%"></div>
             </div>
 
         </div>
@@ -101,6 +94,11 @@
               style="color:#767676; font-family:Verdana; font-weight: bold; font-size: 20px; margin-top: 20px">Your shopping items</span>
         <input type="button" id="formSubmission" onclick="createProductNav()" value="Organise Items" align="right"/>
         <input type="button" id="backToProdList" onclick="addToShoppingList()" value="Back" align="right"/>
+        <input type="button" id="sendToEmail" onclick="function sendToEmailPrompt() {
+                const emailId = prompt('Enter your emailId where you would like to send the order?');
+                alert(emailId)
+        }
+        sendToEmailPrompt()" value="Email order"  align="right" />
         <div id="tableDiv"
              style="border: 1px solid #aaaaaa; margin-top: 1%; background-color: #e9e9e9; height: auto; align-content: center; width: 100%">
             <table id="itemList" border="0px" width="100%">

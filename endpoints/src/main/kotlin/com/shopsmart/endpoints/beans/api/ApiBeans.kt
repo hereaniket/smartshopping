@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class Item(val itemName: String, val quantity: Int, val prodId: String)
 
 @Serializable
-data class ShoppingList(val storeId: String, var items: List<Item>)
+data class ShoppingList(val orderId: String, val storeId: String, var items: List<Item>)
 
 @Serializable
 data class AutoComplete(val token: String, val storeId: String)
@@ -21,14 +21,14 @@ data class TaggedProducts(
 data class PurchaseOrder(
     val orderId: String,
     val storeId: String,
-    val nameOnOrder: String,
-    val maskedEmailOnOrder: String,
-    val maskedPhoneOnOrder: String,
-    val totalAmount: Double,
+    var nameOnOrder: String? = null,
+    var maskedEmailOnOrder: String? = null,
+    var maskedPhoneOnOrder: String? = null,
+    var totalAmount: Double? = null,
 )
 
 data class PurchaseOrderNavigation(
-    val order: PurchaseOrder? = null,
+    var order: PurchaseOrder? = null,
     var listOfDept: List<PurchaseProdDepartment>? = null,
 )
 

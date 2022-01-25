@@ -13,9 +13,13 @@
     const suggStyle = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: regular; background-color: #ececf6; width: 70%"
     const suggStyleSelc = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:12px; font-weight: bold; background-color: #6c757d; width: 70%"
 
+    const storeLocSuggStyle = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:2px; font-weight: regular; background-color: #ececf6; width: 70%"
+    const storeLocSuggStyleSelc = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:2px; font-weight: bold; background-color: #6c757d; width: 70%"
+
     const suggStyleMouseOver = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: bold"
     const suggStyleMouseLeave = "border: 1px solid #aaaaaa; border-top: 0px; padding-top:10px; font-weight: regular"
 
+    let orderId = null
     let store
     let resetBtn
     let element
@@ -30,8 +34,12 @@
     let reviewItemsText = null
     let loadingAnimation = null
     let backToProdList = null
+    let selectStoreLabel = null
 
     function init() {
+        document.getElementById("sendToEmail").hidden = true
+        selectStoreLabel = document.getElementById("selectStoreLabel")
+
         reviewItemsText = document.getElementById("reviewItemsText")
         store = document.getElementById("store");
         resetBtn = document.getElementById("reset");
@@ -54,6 +62,7 @@
         suggestionBox.innerHTML = "";
         loadingAnimation.hidden = true
         backToProdList.hidden = true;
+        selectStoreLabel.hidden = true;
     }
 
 
@@ -121,4 +130,20 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         } else return string
 
+    }
+
+    function generateUUID() {
+        let d = new Date().getTime();//Timestamp
+        let d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            let r = Math.random() * 16;//random number between 0 and 16
+            if(d > 0){//Use timestamp until depleted
+                r = (d + r)%16 | 0;
+                d = Math.floor(d/16);
+            } else {//Use microseconds since page-load if supported
+                r = (d2 + r)%16 | 0;
+                d2 = Math.floor(d2/16);
+            }
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
     }
