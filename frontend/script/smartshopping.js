@@ -4,7 +4,13 @@
  */
 function createProductNav() {
 
+    if (orderId == "" || orderId == null){
+        orderId = generateUUID();
+    }
+
     backToProdList.hidden = false;
+    document.getElementById("sendToEmail").hidden = false
+
     formSubmission.hidden = true;
     const quantity = document.getElementsByName('quantity');
     const table = document.getElementById('itemList');
@@ -31,7 +37,7 @@ function createProductNav() {
         }
     }
 
-    let reqJson = "{\"storeId\":\"" + store.value + "\", \"items\": [" + finalValue + "]}";
+    let reqJson = "{\"orderId\":\""+orderId+"\", \"storeId\":\"" + store.value + "\", \"items\": [" + finalValue + "]}";
     console.log(reqJson)
 
     post(validate_shopping_note_url, reqJson)
@@ -109,9 +115,9 @@ function productLabelOnNav(rackSeq, aisleName, product) {
     const productQuantity = product["productQuantity"]
     const displayIsleRackSec = aisleName.toUpperCase()+rackSeq+"/"+productRackSeqNo
 
-    const prodDivs = displayIsleRackSec+" "+productDisplayName+" - <span style='font-weight: regular'>Qty</span>: "+productQuantity
+    const prodDivs = "<u>"+displayIsleRackSec+"</u> "+productDisplayName+" - <span style='font-weight: regular'>Qty</span>: "+productQuantity
     let li = document.createElement("li")
-    li.setAttribute("style",liStyle)
+    li.setAttribute("style", liStyle)
     li.innerHTML = prodDivs
 
     return li;
@@ -129,11 +135,16 @@ function space(count) {
     return space
 }
 
+/*
+Zip to location dropdown
+ */
 let globalZip = 0
-let storeSet = new Set()
+let storeSet = new Map()
 function findStore(event) {
-    const zip = document.getElementById("zip").value;
+    const zipTxtBox = document.getElementById("zip");
+    const storeLocatorAC = document.getElementById("storeLocatorAC")
 
+    const zip = zipTxtBox.value;
     if ((zip != null || zip != "") && zip.length == 5 && globalZip != zip) {
         globalZip = zip;
         console.log(zip)
@@ -142,11 +153,62 @@ function findStore(event) {
             .then(response => response.json())
             .then(data => {
 
+                if (data.length == 0) {
+                    storeSet.clear()
+                    storeLocatorAC.hidden = true
+                } else {
+                    storeLocatorAC.hidden = false
+                    storeLocatorAC.style.position = "inherit"
+                    storeLocatorAC.style.top = "inherit";
+                    storeLocatorAC.style.left = "inherit";
+                }
+
+                for (let i = 0; i < data.length; i++) {
+                    const stores = data[i]
+                    storeSet.set(stores["storeId"], stores["storeNm"])
+                }
+
+                let count = 0
+                storeSet.forEach((storeId, storeNm) => {
+                    let div = document.createElement("div")
+                    div.setAttribute('onclick', 'selectedStore("' + storeNm + '","' + storeId + '")')
+                    div.setAttribute("id", "storeLocation_" + count)
+                    div.setAttribute("style", storeLocSuggStyle)
+                    div.innerHTML = storeId.toString()
+                    storeLocatorAC.appendChild(div)
+                    count++
+                })
+                count = 0
             }).catch(reason => {
             genericError(reason)
         })
+    } else if(zip.length <= 5) {
+        globalZip = 0
+        storeSet.clear()
+        storeLocatorAC.innerHTML = ""
     }
 }
+function selectedStore(storeId, storeNm) {
+    const storeLocatorAC = document.getElementById("storeLocatorAC")
+    document.getElementById("storeName").innerHTML = storeNm
+    document.getElementById("store").value = storeId
+    storeLocatorAC.innerHTML = ""
+    storeSet.clear()
+    storeLocatorAC.hidden = true
+
+    //Select store label
+    selectStoreLabel.hidden = false;
+
+    //Enabling item text input
+    resetBtn.hidden = false
+    store.disabled = true
+    itemInput.hidden = false;
+    element.focus()
+}
+
+
+
+
 /*
     Auto complete suggestion API call
  */
@@ -157,6 +219,10 @@ function autoComplete(value) {
         .then(data => {
             if (data.length == 0) {
                 suggestedElementSet.clear()
+            } else {
+                suggestionBox.style.position = "inherit"
+                suggestionBox.style.top = "inherit";
+                suggestionBox.style.left = "inherit";
             }
 
             for (let i = 0; i < data.length; i++) {
@@ -244,6 +310,7 @@ function addToShoppingList(optionalProdNm, optionalProdId) {
     reviewItemsText.hidden = false;
 
     backToProdList.hidden = true;
+    document.getElementById("sendToEmail").hidden = true
 
     document.getElementById("navigation").hidden = true
     document.getElementById("navigation").innerHTML = ""
@@ -272,14 +339,16 @@ function addToShoppingList(optionalProdNm, optionalProdId) {
         newText = filterSpacial(element.value)
         prodId = null
 
-        post(match_tag_url, "{\"token\":\"" + newText + "\",\"storeId\":\"" + store.value + "\"}")
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                populateProductTable(newText, prodId, data)
-            }).catch(reason => {
-            genericError(reason)
-        })
+        if(newText != "" && newText != null){
+            post(match_tag_url, "{\"token\":\"" + newText + "\",\"storeId\":\"" + store.value + "\"}")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    populateProductTable(newText, prodId, data)
+                }).catch(reason => {
+                genericError(reason)
+            })
+        }
     }
 }
 
@@ -336,6 +405,21 @@ function reset() {
     suggestedElementSet.clear()
     suggestionBox.innerHTML = ""
 
+    //Select store label
+    selectStoreLabel.hidden = true;
+
+    document.getElementById("navigation").hidden = true
+    document.getElementById("navigation").innerHTML = ""
+
+    const storeLocatorAC = document.getElementById("storeLocatorAC")
+    storeLocatorAC.innerHTML = ""
+    storeSet.clear()
+    const zip = document.getElementById("zip")
+    zip.value = ""
+
+    document.getElementById("sendToEmail").hidden = true
+
+    orderId = null
 }
 
 function populateProductTable(newText, prodId, additionalProds) {

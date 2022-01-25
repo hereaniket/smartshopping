@@ -1,10 +1,13 @@
 package com.shopsmart.endpoints.action
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters
 import com.shopsmart.backend.service.db.SmartShopDBManager
 import com.shopsmart.endpoints.beans.api.*
 import com.shopsmart.endpoints.beans.entity.AisleInfo
 import com.shopsmart.endpoints.beans.entity.DepartmentInfo
+import com.shopsmart.endpoints.beans.entity.OrderInfo
 import com.shopsmart.endpoints.beans.entity.ProductInfo
 import io.ktor.application.*
 import io.ktor.features.*
@@ -15,6 +18,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -53,7 +57,8 @@ fun Application.shoppingService() {
 
                 post("v1/search/autocomplete/") {
                     val autoComplete = call.receive<AutoComplete>()
-                    val bson = Filters.and(Filters.eq("storeId",autoComplete.storeId), Filters.text(autoComplete.token))
+                    val bson =
+                        Filters.and(Filters.eq("storeId", autoComplete.storeId), Filters.text(autoComplete.token))
 
                     val prodList = smartShopDBManager.searchProductTags(bson, 20)
                     call.respond(HttpStatusCode.OK, prodList)
@@ -64,7 +69,8 @@ fun Application.shoppingService() {
                     withContext(Dispatchers.IO) {
 
                     }
-                    val bson = Filters.and(Filters.eq("storeId",autoComplete.storeId), Filters.text(autoComplete.token))
+                    val bson =
+                        Filters.and(Filters.eq("storeId", autoComplete.storeId), Filters.text(autoComplete.token))
                     val productTagBson = smartShopDBManager.searchProductTags(bson, 10)
 
                     val taggedProducts = productTagBson.map { tag ->
@@ -87,11 +93,9 @@ fun Application.shoppingService() {
                         //product - quantity map
                         val prodIdQntyMap = shoppingList.items.map { it.prodId to it.quantity }.toMap()
                         val filteredSize = productList.filter { prodIdQntyMap.containsKey(it.prodId) }.size
-
                         //Validity for all product list size
-                        if (2*shoppingList.items.size == productList.size + filteredSize) {
+                        if (2 * shoppingList.items.size == productList.size + filteredSize) {
                             val purchaseOrderNavigation = PurchaseOrderNavigation()
-
 
                             //Department wise group
                             val groupedByDept = productList.groupBy { it.deptInfo.deptNm }
@@ -114,15 +118,16 @@ fun Application.shoppingService() {
                                         .sortedWith(compareBy { it.aisleInfo.aisleSeqNo })
                                         .groupBy { it.aisleInfo.aisleSeqNo }
                                     val listOfRacks = mutableListOf<PurchaseProdRack>()
-                                    grpByAslRackSeq.forEach{ grpByAslRackSeqProd ->
+                                    grpByAslRackSeq.forEach { grpByAslRackSeqProd ->
                                         val purchaseProdRack = PurchaseProdRack()
                                         purchaseProdRack.rackSeq = grpByAslRackSeqProd.key
 
 
                                         //Group by Rack Sequence (section)
-                                        val grpByAslRackSecSeq = grpByAslRackSeqProd.value.groupBy { it.aisleInfo.rackSecNm }
+                                        val grpByAslRackSecSeq =
+                                            grpByAslRackSeqProd.value.groupBy { it.aisleInfo.rackSecNm }
                                         val listOfSections = mutableListOf<PurchaseProdSection>()
-                                        grpByAslRackSecSeq.forEach{ grpByAslRackSecSeqProd ->
+                                        grpByAslRackSecSeq.forEach { grpByAslRackSecSeqProd ->
                                             val purchaseProdSection = PurchaseProdSection()
                                             purchaseProdSection.sectionSeq = grpByAslRackSecSeqProd.key
 
@@ -156,6 +161,36 @@ fun Application.shoppingService() {
                             }
 
                             purchaseOrderNavigation.listOfDept = listOfDepts
+                            purchaseOrderNavigation.order = PurchaseOrder(
+                                orderId = shoppingList.orderId,
+                                storeId = shoppingList.storeId,
+                            )
+
+                            //Process Order
+                            val orderInfoDoc = smartShopDBManager.search(
+                                "order_info", Filters.eq("orderId", shoppingList.orderId), 1
+                            )
+
+                            if (orderInfoDoc != null && orderInfoDoc.isNotEmpty()) {
+                                val orderInfo = orderInfoDoc[0]
+                                val updatedProdList = Document().append("prodIdList",
+                                    shoppingList.items.map { it.prodId })
+
+                                val orderId = orderInfo.getString("orderId")
+                                smartShopDBManager.updateOne("order_info",
+                                    Filters.eq("orderId", orderId), Document().append("\$set", updatedProdList))
+                            } else {
+                                smartShopDBManager.insertOne("order_info", Document()
+                                    .append("orderId", shoppingList.orderId)
+                                    .append("storeId", shoppingList.storeId)
+                                    .append("nameOnOrder", "")
+                                    .append("emailId", "")
+                                    .append("mobile", "")
+                                    .append("totalAmt", 0.0)
+                                    .append("prodIdList", shoppingList.items.map { it.prodId })
+                                )
+                            }
+
                             call.respond(HttpStatusCode.OK, purchaseOrderNavigation)
                         } else {
                             call.respond(HttpStatusCode.InternalServerError, "Unable to proceed")
@@ -165,8 +200,9 @@ fun Application.shoppingService() {
 
                 get("v1/search/store/{zip}") {
                     withContext(Dispatchers.IO) {
-                        val zip = call.receiveParameters()["zip"]
-                        call.respondText(""+zip)
+                        val zip = call.parameters["zip"]
+                        val store = smartShopDBManager.search("store", Filters.eq("storeZp", zip), 5)
+                        call.respond(HttpStatusCode.OK, store)
                     }
                 }
 
