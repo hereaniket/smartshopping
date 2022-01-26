@@ -372,8 +372,8 @@ fun separateKnownAndUnknown(shoppingList: ShoppingList): Map<String, List<Item>>
 suspend fun sendEmail(subject: String, recipient: String, body: String): String {
 
     return withContext(Dispatchers.Default) {
-        val username = "heremakermind@gmail.com"
-        val password = "ocylvayrgfherqwg"
+        val username = ""
+        val password = ""
 
         val prop = Properties()
         prop["mail.smtp.host"] = "smtp.gmail.com"
