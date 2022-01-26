@@ -1,0 +1,3 @@
+rootProject.name = 'ShopSmart'
+
+include('frontend','backends:mongo', 'backends:services', 'endpoints')

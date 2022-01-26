@@ -1,0 +1,122 @@
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <title>Smart Shop</title>
+    <style>
+        .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .styled-table thead tr {
+            background-color: #767676;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #767676;
+        }
+    </style>
+    <script data-require="jquery@3.1.1" data-semver="3.1.1"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="css/counter.css"/>
+    <link rel="stylesheet" href="css/w3.css">
+    <script src="script.js"></script>
+    <script src="script/common.js"></script>
+    <script src="script/smartshopping.js"></script>
+    <script href="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script href="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+</head>
+
+
+<body onload="init()" style="font-family: Verdana;">
+
+<div id="smartshopretrieve" class="w3-row-padding" style="align-self: center; border: #0056b3 solid 0px; width: auto">
+
+</div>
+
+<div id="smartshoplanding" class="w3-row-padding" style="align-self: center; border: #0056b3 solid 0px; width: auto">
+
+    <div class="w3-third">
+        <span style="color:#767676 ;font-family:Verdana; font-weight: bold; font-size: 20px;">Create your shopping note</span>
+
+        <div id="formMain" style="border: 1px solid #aaaaaa; margin-top: 2%; background-color: #e9e9e9;">
+            <div align="left" style="padding: 10px;">
+                <p>
+                    <button id="reset" onclick="reset()">Reset</button>
+                </p>
+
+                <div>
+                    <label style="font-weight: bold;">Enter your zip: </label>
+                    <input  autocomplete="off" style="padding: 0px; width: 70%" maxlength="5" type="text" id="zip" maxlength="5" onkeyup="findStore(event)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                    <div id="storeLocatorAC" style="; margin-left: 22%"></div>
+                </div>
+
+                <div id="selectStoreLabel"><br>
+                    <label style="font-weight: bold;">Select your shop: </label>
+                    <label style="font-weight: normal;" id="storeName"></label>
+                    <input type="hidden" id="store" />
+                </div>
+
+            </div>
+
+            <div align="left" style="padding: 10px; " id="itemInput">
+                <label style="font-weight: bold;">Enter item name: </label>
+                <input autocomplete="off" id="itemText" onkeyup="actionOnKeyUp(event)" type="text" name="item"
+                       style="padding: 0px; width: 65%" maxlength="20"/>
+                <div id="suggestionHolder" style="; margin-left: 25%"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="w3-third">
+
+        <span id="reviewItemsText" style="color:#767676; font-family:Verdana; font-weight: bold; font-size: 20px; margin-top: 20px">Your shopping items</span>
+        <input type="button" id="formSubmission" onclick="createProductNav()" value="Organise Items" align="right"/>
+        <input type="button" id="backToProdList" onclick="addToShoppingList()" value="Back" align="right"/>
+        <input type="button" id="sendToEmail" onclick="sendToEmailPrompt()" value="Email order"  align="right" />
+        <div id="tableDiv"
+             style="border: 1px solid #aaaaaa; margin-top: 1%; background-color: #e9e9e9; height: auto; align-content: center; width: 100%">
+            <table id="itemList" border="0px" width="100%">
+                <tr id="tableHeader" style="font-weight: bold">
+                    <td width="15%">SKU Id</td>
+                    <td width="60%">Name</td>
+                    <td width="25%">Quantity</td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="padding-left: 10px; padding-top:10px; border: 1px solid #aaaaaa; margin-top: 1%; background-color: #e9e9e9; height: auto; align-content: center"
+             id="navigation" hidden="true">
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
