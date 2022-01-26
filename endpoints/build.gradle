@@ -23,5 +23,6 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:1.2.5"
     implementation "io.ktor:ktor-jackson:1.6.5"
     implementation "io.ktor:ktor-serialization:1.6.5"
+    implementation "com.sun.mail:javax.mail:1.6.2"
     implementation project(":backends:mongo")
 }

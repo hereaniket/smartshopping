@@ -1,7 +1,9 @@
 
     const host = "http://localhost"
     const port = "8080"
+    const retrieve_shopping_note_url = host+":"+port+"/v1/search/order/";
     const validate_shopping_note_url = host+":"+port+"/v1/validate/";
+    const email_shopping_note_url = host+":"+port+"/v1/email/";
     const auto_complete_url = host+":"+port+"/v1/search/autocomplete/";
     const match_tag_url = host+":"+port+"/v1/search/matchTags/";
     const find_store_url = host+":"+port+"/v1/search/store/";
@@ -37,6 +39,12 @@
     let selectStoreLabel = null
 
     function init() {
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+
         document.getElementById("sendToEmail").hidden = true
         selectStoreLabel = document.getElementById("selectStoreLabel")
 
@@ -63,8 +71,90 @@
         loadingAnimation.hidden = true
         backToProdList.hidden = true;
         selectStoreLabel.hidden = true;
+
+        if (params["retrieveId"] != null) {
+            document.getElementById("smartshoplanding").hidden=true
+            let smartshopretrieve = document.getElementById("smartshopretrieve")
+            smartshopretrieve.hidden = true
+
+            const retrieveId = params["retrieveId"]
+
+            get(retrieve_shopping_note_url+retrieveId)
+                .then(response => response.json())
+                .then(data => {
+                    renderProductNavigation(
+                        document.getElementById("smartshopretrieve"),
+                        data
+                    )
+                }).catch(reason => {
+                genericError(reason)
+            })
+        }
     }
 
+
+    /*
+        Responsible for building product listing in sorted and navigable order...
+     */
+    function renderProductNavigation(divContainer, data) {
+        console.log(data)
+        let totalPrice = 0.0
+
+        divContainer.innerHTML = ""
+        divContainer.hidden=true
+
+        let listOfDept = data["listOfDept"]
+        listOfDept.forEach(dept => {
+
+            const department = dept["departmentName"]
+            let deptPara = document.createElement("p")
+            deptPara.setAttribute("style","width: 30%; background-color: #adb5bd; padding-bottom: 10px; font-size: 16px; font-family: Verdana; font-weight: bold")
+            let docSpan = document.createElement("span")
+            docSpan.setAttribute("style","margin: 5px;")
+            docSpan.innerHTML = capFirstLetter(department)
+            deptPara.appendChild(docSpan)
+            divContainer.appendChild(deptPara)
+
+            let listOfAisle = dept["listOfAisle"]
+            listOfAisle.forEach(aisle => {
+                const aisleName = aisle["aisleName"]
+
+                let listOfRack = aisle["listOfRack"]
+                listOfRack.forEach(rack => {
+                    const rackSeq = rack["rackSeq"]
+
+                    let aisleSpan = document.createElement("span")
+                    aisleSpan.setAttribute("style","color: #0056b3; font-size: 14px; font-family: Verdana; font-weight: bold")
+                    aisleSpan.innerHTML = "Aisle - " +aisleName.toUpperCase() + rackSeq
+                    //divNavigation.appendChild(aisleSpan)
+
+                    let aisleSectionUl = document.createElement("ul")
+                    let listOfSection = rack["listOfSection"]
+                    listOfSection.forEach(section => {
+                        const sectionSeq = section["sectionSeq"]
+
+                        let aisleSectionli = document.createElement("li")
+                        aisleSectionli.setAttribute("style","color: #0056b3; font-size: 14px; font-family: Verdana; font-weight: bold; margin:5px")
+                        aisleSectionli.innerHTML = capFirstLetter(sectionSeq)
+                        aisleSectionUl.appendChild(aisleSectionli)
+
+
+                        let productUl = document.createElement("ul")
+                        let index = 0
+                        let products = section["listOfProduct"]
+                        products.forEach(product => {
+                            totalPrice = totalPrice + product["unitPrice"]
+                            productUl.appendChild(productLabelOnNav(rackSeq, aisleName, product))
+                            index++
+                        })
+                        aisleSectionUl.appendChild(productUl)
+                        divContainer.appendChild(aisleSectionUl)
+                    })
+                })
+            })
+        })
+        divContainer.hidden = false
+    }
 
     function genericError(reason) {
         if(reason == "TypeError: Failed to fetch"){

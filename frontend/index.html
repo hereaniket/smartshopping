@@ -51,7 +51,11 @@
 
 <body onload="init()" style="font-family: Verdana;">
 
-<div class="w3-row-padding" style="align-self: center; border: #0056b3 solid 0px; width: auto">
+<div id="smartshopretrieve" class="w3-row-padding" style="align-self: center; border: #0056b3 solid 0px; width: auto">
+
+</div>
+
+<div id="smartshoplanding" class="w3-row-padding" style="align-self: center; border: #0056b3 solid 0px; width: auto">
 
     <div class="w3-third">
         <span style="color:#767676 ;font-family:Verdana; font-weight: bold; font-size: 20px;">Create your shopping note</span>
@@ -90,15 +94,10 @@
 
     <div class="w3-third">
 
-        <span id="reviewItemsText"
-              style="color:#767676; font-family:Verdana; font-weight: bold; font-size: 20px; margin-top: 20px">Your shopping items</span>
+        <span id="reviewItemsText" style="color:#767676; font-family:Verdana; font-weight: bold; font-size: 20px; margin-top: 20px">Your shopping items</span>
         <input type="button" id="formSubmission" onclick="createProductNav()" value="Organise Items" align="right"/>
         <input type="button" id="backToProdList" onclick="addToShoppingList()" value="Back" align="right"/>
-        <input type="button" id="sendToEmail" onclick="function sendToEmailPrompt() {
-                const emailId = prompt('Enter your emailId where you would like to send the order?');
-                alert(emailId)
-        }
-        sendToEmailPrompt()" value="Email order"  align="right" />
+        <input type="button" id="sendToEmail" onclick="sendToEmailPrompt()" value="Email order"  align="right" />
         <div id="tableDiv"
              style="border: 1px solid #aaaaaa; margin-top: 1%; background-color: #e9e9e9; height: auto; align-content: center; width: 100%">
             <table id="itemList" border="0px" width="100%">

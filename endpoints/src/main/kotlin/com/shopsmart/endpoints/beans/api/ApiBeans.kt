@@ -11,6 +11,10 @@ data class ShoppingList(val orderId: String, val storeId: String, var items: Lis
 @Serializable
 data class AutoComplete(val token: String, val storeId: String)
 
+data class SendToEmail(val emailId: String, val orderId: String)
+
+data class Status(val statusCd: String, val errorCode: String?=null, val errorDesc: String?=null)
+
 data class TaggedProducts(
     val storeId: String,
     val productId: Int,

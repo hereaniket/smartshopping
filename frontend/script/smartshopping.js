@@ -102,6 +102,20 @@ function createProductNav() {
             })
             document.getElementById("tableDiv").hidden = true
             divNavigation.hidden = false
+
+            if (document.getElementById("orderIdText") == null){
+                let orderIdInput = document.createElement("input")
+                orderIdInput.type = "text"
+                orderIdInput.id = "orderIdText"
+                orderIdInput.hidden=true
+                orderIdInput.value  = orderId
+                divNavigation.appendChild(orderIdInput)
+            } else {
+                document.getElementById("orderIdText").value = orderId;
+            }
+
+
+
         }).catch(reason => {
         genericError(reason)
     })
@@ -207,7 +221,29 @@ function selectedStore(storeId, storeNm) {
 }
 
 
+/*
+Email function
+ */
+function sendToEmailPrompt() {
+    const orderId = document.getElementById("orderIdText").value;
+    const emailId = prompt('Enter your emailId to send a link to this order');
+    if (emailId != null && emailId != ""){
 
+        post(email_shopping_note_url, "{\"emailId\":\""+emailId+"\",\"orderId\":\""+orderId+"\"}")
+            .then(response => response.json())
+            .then(data => {
+                if (data["statusCd"] != null && data["statusCd"] == "SCS"){
+                    alert(data["errorDesc"])
+                } else {
+                    alert(data["errorDesc"])
+                }
+            }).catch(reason => {
+                genericError(reason)
+            })
+
+    }
+
+}
 
 /*
     Auto complete suggestion API call
